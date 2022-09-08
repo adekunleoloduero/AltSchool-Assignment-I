@@ -2,7 +2,7 @@ const express = require('express');
 const bookRoutes = express.Router();
 
 
-bookRoutes.post('/', (req, res) => {
+bookRoutes.get('/', (req, res) => {
     res.send('Books Page');
 });
 
