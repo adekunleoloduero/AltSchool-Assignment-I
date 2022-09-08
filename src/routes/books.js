@@ -7,7 +7,7 @@ bookRoutes.post('/', (req, res) => {
 });
 
 
-bookRoutes.post('/add', (req, res) => {
+bookRoutes.post('/create', (req, res) => {
     res.send('Add new book');
 });
 
