@@ -51,15 +51,14 @@ userRoutes.post('/create', async (req, res) => {
             user.id = userId;
             usersArray.push(user);
             writeToFile(usersDbPath, JSON.stringify(usersArray));
-            message = 'Thanks for registering. Your details have been saved.'
         } else {
             //Run if there are already records in the database
             userId = usersArray[usersArray.length - 1].id + 1;
             user.id = userId;
             usersArray.push(user);
             writeToFile(usersDbPath, JSON.stringify(usersArray));
-            message = 'Thanks for registering. Your details have been saved.'
         }
+        message = 'Thanks for registering. Your details have been saved.'
         res.statusCode = 201;
     } else {
         res.statusCode = 400;
