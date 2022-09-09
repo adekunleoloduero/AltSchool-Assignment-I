@@ -18,9 +18,9 @@ function returnAllRecords(recordsPath) {
 
 
 function writeToFile(filePath, content) {
-    fs.writeFile(filePath, content, () => {
-        if (err) {
-            console.log(err);
+    fs.writeFile(filePath, content, (error) => {
+        if (error) {
+            console.log(error);
         }
     });
 }
