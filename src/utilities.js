@@ -26,13 +26,16 @@ function writeToFile(filePath, content) {
 }
 
 
-function getPath(directoryName, toRemove, ...pathValues) {
+function getPath(directoryName, toDisjoin, toJoin) {
     let fullPath = directoryName;
-    if (toRemove) {
-        fullPath = fullPath.replace(`${path.sep}${toRemove}`, '');
+
+    if (toDisjoin) {
+        for (const val of toDisjoin) {
+            fullPath = fullPath.replace(`${path.sep}${toDisjoin}`, '');
+        }
     }
 
-    for (const val of pathValues) {
+    for (const val of toJoin) {
         fullPath = path.join(fullPath, val);
     }
     return fullPath;

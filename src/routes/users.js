@@ -14,7 +14,7 @@ userRoutes.use(express.json());
 
 
 //File based database path
-const usersDbPath = getPath(__dirname, 'routes', 'models', 'users.json');
+const usersDbPath = getPath(__dirname, ['routes'], ['models', 'users.json']);
 
 
 userRoutes.get('/', (req, res) => {
