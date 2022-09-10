@@ -4,49 +4,50 @@ const supertest = require('supertest');
 
 
 
-const dbPath = getPath(__dirname, ['integration'], ['fixtures', 'stubs', 'users.json']);
-
 
 describe('Route: /users/create, Method: POST', () => {
     it('Confirms that a valid input is sent in the request', async () => {
-        const response = await supertest(app).post('/users/create').send(
-            {
-                "username": "testOneOkan",
-                "password": "test1"
-            }
-        );
+        const requestBody = {
+            "username": "testMeji",
+            "password": "test1"
+        }
+
+        const response = await supertest(app).post('/users/create').send(requestBody);
         expect(response.statusCode).toBe(201);
         expect(response.text).toBe(JSON.stringify({ message: "Thanks for registering. Your details have been saved." }));
     });
 
     it ('Checks if a username is provided', async () => {
-        const response = await supertest(app).post('/users/create').send(
-            {
-                "password": "test1"
-            }
-        );
+        const requestBody = {
+            "password": "test1"
+        }
+
+        const response = await supertest(app).post('/users/create').send(requestBody);
         expect(response.statusCode).toBe(400);
-        expect(response.text).toBe(JSON.stringify({ message: "Please, choose a username." }));
+        expect(response.text).toBe(JSON.stringify({ message: "Please, enter a username." }));
     });
 
     it ('Checks if a password is provided', async () => {
-        const response = await supertest(app).post('/users/create').send(
-            {
-                "username": "testOne",
-            }
-        );
+        const requestBody = {
+            "password": "test1"
+        }
+        const response = await supertest(app).post('/users/create').send(requestBody);
         expect(response.statusCode).toBe(400);
-        expect(response.text).toBe(JSON.stringify({ message: "Please, create a password." }));
+        expect(response.text).toBe(JSON.stringify({ message: "Please, enter a password." }));
     });
 
     it ('Checks if username provided is not already used', async () => {
-        const response = await supertest(app).post('/users/create').send(
-            {
-                "username": "testOne",
-                "password": "test1"
-            }
-        );
+        const requestBody = {
+            "username": "testMeji",
+            "password": "test1"
+        }
+        
+        //Determine if username already exist
+
+
+
+        const response = await supertest(app).post('/users/create').send(requestBody);
         expect(response.statusCode).toBe(400);
-        expect(response.text).toBe(JSON.stringify({ message: "Sorry, this username is no longer available." }));
+        expect(response.text).toBe(JSON.stringify({ message: "Sorry, this username already exists." }));
     });
 });

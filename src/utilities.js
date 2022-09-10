@@ -31,7 +31,7 @@ function getPath(directoryName, toDisjoin, toJoin) {
 
     if (toDisjoin) {
         for (const val of toDisjoin) {
-            fullPath = fullPath.replace(`${path.sep}${toDisjoin}`, '');
+            fullPath = fullPath.replace(`${path.sep}${val}`, '');
         }
     }
 

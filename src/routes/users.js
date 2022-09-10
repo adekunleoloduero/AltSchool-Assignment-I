@@ -14,7 +14,8 @@ userRoutes.use(express.json());
 
 
 //File based database path
-const usersDbPath = getPath(__dirname, ['routes'], ['models', 'users.json']);
+// const usersDbPath = getPath(__dirname, ['routes'], ['models', 'users.json']); //For Production
+const usersDbPath = getPath(__dirname, ['routes', 'src'], ['test', 'fixtures', 'stubs', 'users.json']); //For Testing
 
 
 userRoutes.get('/', (req, res) => {
@@ -33,11 +34,11 @@ userRoutes.post('/create', async (req, res) => {
     const userFound = usersArray.find(savedUser => savedUser.username === user.username)
     //Input validation
     if (!user.username) {
-        message = 'Please, choose a username.';
+        message = 'Please, enter a username.';
     } else if (!user.password) {
-        message = 'Please, create a password.';
+        message = 'Please, enter a password.';
     } else if (userFound) {
-        message = 'Sorry, this username is no longer available.';
+        message = 'Sorry, this username already exists.';
     } else {
         inputValidated = true;
     }
