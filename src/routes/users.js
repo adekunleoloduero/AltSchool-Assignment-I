@@ -14,7 +14,8 @@ userRoutes.use(express.json());
 
 
 //File based database path
-const usersDbPath = getPath(__dirname, 'routes', 'models', 'users.json');
+// const usersDbPath = getPath(__dirname, ['routes'], ['models', 'users.json']); //For Production
+const usersDbPath = getPath(__dirname, ['routes', 'src'], ['test', 'fixtures', 'stubs', 'users.json']); //For Testing
 
 
 userRoutes.get('/', (req, res) => {
@@ -22,22 +23,48 @@ userRoutes.get('/', (req, res) => {
 });
 
 
+//POST: users/create (Register a new user)
 userRoutes.post('/create', async (req, res) => {
     const user = req.body;
+    let message;
     const users = await returnAllRecords(usersDbPath);
-    let usersArray;
-    let userId;
-    
-    //Run only for the first user to be registered
-    if (!users) {
-        usersArray = [];
-        userId = 1;
-        user.id = userId;
-        usersArray.push(user);
+    let usersArray = JSON.parse(users);
+    let inputValidated = false
+
+    const userFound = usersArray.find(savedUser => savedUser.username === user.username)
+    //Input validation
+    if (!user.username) {
+        message = 'Please, enter a username.';
+    } else if (!user.password) {
+        message = 'Please, enter a password.';
+    } else if (userFound) {
+        message = 'Sorry, this username already exists.';
+    } else {
+        inputValidated = true;
     }
 
-    usersArray = JSON.parse(users);
-
+    //Run only for the first user to be registered
+    if (inputValidated) {
+        let userId;
+        if (!users) {
+            usersArray = [];
+            userId = 1;
+            user.id = userId;
+            usersArray.push(user);
+            writeToFile(usersDbPath, JSON.stringify(usersArray));
+        } else {
+            //Run if there are already records in the database
+            userId = usersArray[usersArray.length - 1].id + 1;
+            user.id = userId;
+            usersArray.push(user);
+            writeToFile(usersDbPath, JSON.stringify(usersArray));
+        }
+        message = 'Thanks for registering. Your details have been saved.'
+        res.statusCode = 201;
+    } else {
+        res.statusCode = 400;
+    }
+    res.json({ message });
 });
 
 
