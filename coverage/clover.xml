@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1662798909608" clover="3.2.0">
-  <project timestamp="1662798909609" name="All files">
-    <metrics statements="88" coveredstatements="60" conditionals="18" coveredconditionals="10" methods="20" coveredmethods="7" elements="126" coveredelements="77" complexity="0" loc="88" ncloc="88" packages="2" files="4" classes="4"/>
+<coverage generated="1662857505588" clover="3.2.0">
+  <project timestamp="1662857505589" name="All files">
+    <metrics statements="88" coveredstatements="62" conditionals="18" coveredconditionals="11" methods="20" coveredmethods="8" elements="126" coveredelements="81" complexity="0" loc="88" ncloc="88" packages="2" files="4" classes="4"/>
     <package name="src">
-      <metrics statements="31" coveredstatements="25" conditionals="8" coveredconditionals="4" methods="9" coveredmethods="5"/>
+      <metrics statements="31" coveredstatements="26" conditionals="8" coveredconditionals="5" methods="9" coveredmethods="5"/>
       <file name="app.js" path="C:\Users\User\web-projects\AltSchool-Assignment-I\src\app.js">
         <metrics statements="13" coveredstatements="11" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
@@ -21,29 +21,29 @@
         <line num="30" count="1" type="stmt"/>
       </file>
       <file name="utilities.js" path="C:\Users\User\web-projects\AltSchool-Assignment-I\src\utilities.js">
-        <metrics statements="18" coveredstatements="14" conditionals="6" coveredconditionals="2" methods="6" coveredmethods="4"/>
+        <metrics statements="18" coveredstatements="15" conditionals="6" coveredconditionals="3" methods="6" coveredmethods="4"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
-        <line num="8" count="4" type="stmt"/>
-        <line num="9" count="4" type="stmt"/>
-        <line num="10" count="4" type="cond" truecount="1" falsecount="1"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="13" count="4" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="10" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
         <line num="21" count="0" type="stmt"/>
         <line num="22" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="23" count="0" type="stmt"/>
-        <line num="30" count="1" type="stmt"/>
-        <line num="32" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="33" count="1" type="stmt"/>
-        <line num="34" count="2" type="stmt"/>
-        <line num="38" count="1" type="stmt"/>
-        <line num="39" count="4" type="stmt"/>
-        <line num="41" count="1" type="stmt"/>
+        <line num="30" count="2" type="stmt"/>
+        <line num="32" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="34" count="3" type="stmt"/>
+        <line num="38" count="2" type="stmt"/>
+        <line num="39" count="6" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
         <line num="47" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.routes">
-      <metrics statements="57" coveredstatements="35" conditionals="10" coveredconditionals="6" methods="11" coveredmethods="2"/>
+      <metrics statements="57" coveredstatements="36" conditionals="10" coveredconditionals="6" methods="11" coveredmethods="3"/>
       <file name="books.js" path="C:\Users\User\web-projects\AltSchool-Assignment-I\src\routes\books.js">
         <metrics statements="15" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
@@ -63,7 +63,7 @@
         <line num="36" count="1" type="stmt"/>
       </file>
       <file name="users.js" path="C:\Users\User\web-projects\AltSchool-Assignment-I\src\routes\users.js">
-        <metrics statements="42" coveredstatements="26" conditionals="10" coveredconditionals="6" methods="5" coveredmethods="2"/>
+        <metrics statements="42" coveredstatements="27" conditionals="10" coveredconditionals="6" methods="5" coveredmethods="3"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -78,7 +78,7 @@
         <line num="30" count="4" type="stmt"/>
         <line num="31" count="4" type="stmt"/>
         <line num="32" count="4" type="stmt"/>
-        <line num="34" count="31" type="stmt"/>
+        <line num="34" count="25" type="stmt"/>
         <line num="36" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="37" count="1" type="stmt"/>
         <line num="38" count="3" type="cond" truecount="2" falsecount="0"/>
@@ -104,7 +104,7 @@
         <line num="71" count="1" type="stmt"/>
         <line num="72" count="0" type="stmt"/>
         <line num="76" count="1" type="stmt"/>
-        <line num="77" count="0" type="stmt"/>
+        <line num="77" count="1" type="stmt"/>
         <line num="82" count="1" type="stmt"/>
       </file>
     </package>
