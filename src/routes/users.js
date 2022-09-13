@@ -70,7 +70,7 @@ usersRoute.post('/create', async (req, res) => {
 });
 
 
-usersRoute.post('/authenticate_user', (req, res) => {
+usersRoute.post('/authenticateUser', (req, res) => {
     res.send('Authenticate User');
 });
 
@@ -111,7 +111,7 @@ usersRoute.use(async (req, res, next) => {
     }
 });
 
-usersRoute.get('/get_all', async (req, res) => {
+usersRoute.get('/getAllUsers', async (req, res) => {
        const users =  await returnAllRecords(usersDbPath);
        const usersArray = JSON.parse(users);
        res.json(usersArray);

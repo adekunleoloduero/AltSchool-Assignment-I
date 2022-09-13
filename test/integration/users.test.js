@@ -1,9 +1,9 @@
 const app = require('../../src/app');
 const { getPath, returnAllRecords } = require('../../src/utilities');
 const supertest = require('supertest');
-const res = require('express/lib/response');
 
-const usersDbPath = getPath(__dirname, ['integration'], ['fixutures', 'stubs']);
+
+const usersDbPath = getPath(__dirname, ['integration'], ['fixtures', 'stubs', 'users.json']);
 
 
 
@@ -61,13 +61,17 @@ describe('Route: /users/create, Method: POST', () => {
 describe('Route: /users/get_all, Method: GET', () => {
     it('Returns all users if request is by an admin', async() => {
         const users = await returnAllRecords(usersDbPath);
-        const loginDetials = {
+        const adminLoginDetails = {
             "username": "adekunle100",
             "password": "adekunlepass",
         }
-        const response = await supertest(app).get('/users/get_all').send(loginDetials);
-        expect(res.statusCode).toBe(200);
-        expect(res.text).toBe(users);
+
+        const response = await supertest(app).get('/users/getAllUsers').send(adminLoginDetails);
+        expect(response.statusCode).toBe(200);
+        expect(response.text).toBe(users);
     });
 
 });
+
+
+
