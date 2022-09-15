@@ -1,9 +1,8 @@
 const express = require('express');
 const app = require('../app');
 const { getPath, writeToFile, returnAllRecords } = require('../utilities');
-const { auth } = require('../auth');
+const { passwordAuthentication, adminAuthorization } = require('../authentication');
 const bodyParser = require('body-parser');
-const { response } = require('../app');
 
 
 
@@ -76,50 +75,36 @@ usersRoute.post('/authenticateUser', (req, res) => {
 });
 
 
-//User authentication and admin level authorization
-usersRoute.use(async (req, res, next) => {
-    const loginDetails = req.body;
-    let message;
-    if (loginDetails.username === undefined || loginDetails.password === undefined) {
-        message = 'Username or password is missing.';
-        res.statusCode = 400;
-        res.json( { message });
-        return;
-    }
-    const users = await returnAllRecords(usersDbPath);
-    const usersArray = JSON.parse(users);
-    const userFound = usersArray.find(user => user.username === loginDetails.username);
-    if (!userFound) {
-        message = 'Username not found, please register.'
-        res.statusCode = 400;
-        res.json( { message });
-        return;
-    }
 
-    if (userFound.password !== loginDetails.password) {
-        message = 'Wrong username or password.'
-        res.statusCode = 400;
-        res.json( { message });
-        return;
-    }
-
-    if (userFound.role === 'admin') {
-        next();
-    } else {
-        message = 'Access denied. Only admins can view all users.'
-        res.statusCode = 401;
-        res.json({ message });
-    }
-});
-
-usersRoute.get('/getAllUsers', async (req, res) => {
+usersRoute.get('/getAllUsers', 
+    async (req, res, next) => {
+        const passwordAuthorized = await passwordAuthentication(req, res, usersDbPath);
+        if (!passwordAuthorized) {
+            console.log('ERROR', req.errorMessage)
+            res.statusCode = req.errorCode; //Added to req object in the passwordAuthentication  function
+            res.json(req.errorMessage); //Added to req object in the passwordAuthentication  function
+        } else {
+            next();
+        }
+    }, 
+    async (req, res, next) => {
+        const adminAuthorized = await adminAuthorization(req, res, ['admin'], usersDbPath);
+        console.log(adminAuthorization);
+        if (!adminAuthorized) {
+            res.statusCode = req.errorCode; //Added to req object in the adminAuthorization  function
+            res.json(req.errorMessage); //Added to req object in the adminAuthorization  function
+        } else {
+            next();
+        }
+    },
+    async (req, res) => {
        const users =  await returnAllRecords(usersDbPath);
        const usersArray = JSON.parse(users);
-    //    res.writeHead(200, { "Content-Type": "application/json" });
        res.json(usersArray);
     }
 );
 
 
 
+//Exports
 module.exports = usersRoute;
