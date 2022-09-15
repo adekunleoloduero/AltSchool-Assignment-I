@@ -1,16 +1,19 @@
 const express = require('express');
 const app = require('../app');
 const { getPath, writeToFile, returnAllRecords } = require('../utilities');
+const { auth } = require('../auth');
 const bodyParser = require('body-parser');
+const { response } = require('../app');
+
 
 
 //Router
-const userRoutes = express.Router();
+const usersRoute = express.Router();
 
 
 //Middlewares
 // userRoutes.use(bodyParser.json());
-userRoutes.use(express.json());
+usersRoute.use(express.json());
 
 
 //File based database path
@@ -18,13 +21,13 @@ userRoutes.use(express.json());
 const usersDbPath = getPath(__dirname, ['routes', 'src'], ['test', 'fixtures', 'stubs', 'users.json']); //For Testing
 
 
-userRoutes.get('/', (req, res) => {
+usersRoute.get('/', (req, res) => {
     res.send('Users Page');
 });
 
 
 //POST: users/create (Register a new user)
-userRoutes.post('/create', async (req, res) => {
+usersRoute.post('/create', async (req, res) => {
     const user = req.body;
     let message;
     const users = await returnAllRecords(usersDbPath);
@@ -59,7 +62,7 @@ userRoutes.post('/create', async (req, res) => {
             usersArray.push(user);
             writeToFile(usersDbPath, JSON.stringify(usersArray));
         }
-        message = 'Thanks for registering. Your details have been saved.'
+        message = 'Thanks for registering.'
         res.statusCode = 201;
     } else {
         res.statusCode = 400;
@@ -68,15 +71,55 @@ userRoutes.post('/create', async (req, res) => {
 });
 
 
-userRoutes.post('/authenticate_user', (req, res) => {
+usersRoute.post('/authenticateUser', (req, res) => {
     res.send('Authenticate User');
 });
 
 
-userRoutes.get('/get_all_users', (req, res) => {
-    res.send('Get all Users');
+//User authentication and admin level authorization
+usersRoute.use(async (req, res, next) => {
+    const loginDetails = req.body;
+    let message;
+    if (loginDetails.username === undefined || loginDetails.password === undefined) {
+        message = 'Username or password is missing.';
+        res.statusCode = 400;
+        res.json( { message });
+        return;
+    }
+    const users = await returnAllRecords(usersDbPath);
+    const usersArray = JSON.parse(users);
+    const userFound = usersArray.find(user => user.username === loginDetails.username);
+    if (!userFound) {
+        message = 'Username not found, please register.'
+        res.statusCode = 400;
+        res.json( { message });
+        return;
+    }
+
+    if (userFound.password !== loginDetails.password) {
+        message = 'Wrong username or password.'
+        res.statusCode = 400;
+        res.json( { message });
+        return;
+    }
+
+    if (userFound.role === 'admin') {
+        next();
+    } else {
+        message = 'Access denied. Only admins can view all users.'
+        res.statusCode = 401;
+        res.json({ message });
+    }
 });
 
+usersRoute.get('/getAllUsers', async (req, res) => {
+       const users =  await returnAllRecords(usersDbPath);
+       const usersArray = JSON.parse(users);
+    //    res.writeHead(200, { "Content-Type": "application/json" });
+       res.json(usersArray);
+    }
+);
 
 
-module.exports = userRoutes;
+
+module.exports = usersRoute;

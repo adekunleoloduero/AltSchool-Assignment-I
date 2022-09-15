@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express();
-const bookRoutes = require('./routes/books');
-const userRoutes = require('./routes/users');
+const booksRoute = require('./routes/books');
+const usersRoute = require('./routes/users');
 
 
 
 
 //Routes
-app.use('/books', bookRoutes);
-app.use('/users', userRoutes);
+app.use('/books', booksRoute);
+app.use('/users', usersRoute);
 
 app.get('/', (req, res) => {
     res.send('Home Page');

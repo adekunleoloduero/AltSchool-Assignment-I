@@ -2,6 +2,7 @@
     {
         "username": "adekunle100",
         "password": "adekunlepass",
+        "role": "admin",
         "id": 1
     },
     {
@@ -38,5 +39,10 @@
         "username": "testMeji",
         "password": "test1",
         "id": 8
+    },
+    {
+        "username": "harrybobo",
+        "password": "harrison10",
+        "id": 9
     }
 ]
