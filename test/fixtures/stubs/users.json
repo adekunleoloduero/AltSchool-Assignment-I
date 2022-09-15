@@ -1,1 +1,48 @@
-[{"username":"adekunle100","password":"adekunlepass","role":"admin","id":1},{"username":"pandorabet","password":"pandbaba10","id":2},{"username":"jakesully","password":"jake20","id":3},{"username":"adekunle200","password":"adex200","id":4},{"username":"adekunle300","password":"adex300","id":5},{"username":"testOneOkan","password":"test1","id":6},{"username":"testOne","password":"test1","id":7},{"username":"testMeji","password":"test1","id":8},{"username":"harrybobo","password":"harrison10","id":9}]
+[
+    {
+        "username": "adekunle100",
+        "password": "adekunlepass",
+        "role": "admin",
+        "id": 1
+    },
+    {
+        "username": "pandorabet",
+        "password": "pandbaba10",
+        "id": 2
+    },
+    {
+        "username": "jakesully",
+        "password": "jake20",
+        "id": 3
+    },
+    {
+        "username": "adekunle200",
+        "password": "adex200",
+        "id": 4
+    },
+    {
+        "username": "adekunle300",
+        "password": "adex300",
+        "id": 5
+    },
+    {
+        "username": "testOneOkan",
+        "password": "test1",
+        "id": 6
+    },
+    {
+        "username": "testOne",
+        "password": "test1",
+        "id": 7
+    },
+    {
+        "username": "testMeji",
+        "password": "test1",
+        "id": 8
+    },
+    {
+        "username": "harrybobo",
+        "password": "harrison10",
+        "id": 9
+    }
+]

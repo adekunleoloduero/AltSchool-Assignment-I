@@ -3,6 +3,7 @@ const app = require('../app');
 const { getPath, writeToFile, returnAllRecords } = require('../utilities');
 const { auth } = require('../auth');
 const bodyParser = require('body-parser');
+const { response } = require('../app');
 
 
 
@@ -61,7 +62,7 @@ usersRoute.post('/create', async (req, res) => {
             usersArray.push(user);
             writeToFile(usersDbPath, JSON.stringify(usersArray));
         }
-        message = 'Thanks for registering. Your details have been saved.'
+        message = 'Thanks for registering.'
         res.statusCode = 201;
     } else {
         res.statusCode = 400;
@@ -114,6 +115,7 @@ usersRoute.use(async (req, res, next) => {
 usersRoute.get('/getAllUsers', async (req, res) => {
        const users =  await returnAllRecords(usersDbPath);
        const usersArray = JSON.parse(users);
+    //    res.writeHead(200, { "Content-Type": "application/json" });
        res.json(usersArray);
     }
 );
