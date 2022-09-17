@@ -38,7 +38,7 @@ async function adminAuthorization(req, res, roles, usersDbPath) {
     if (roles.includes(req.userRole)) {
         return true;
     } else {
-        req.errorCode = 400;
+        req.errorCode = 401;
         req.errorMessage = { message: 'Access denied. Only admin users are permitted.' };
         return;
     } 

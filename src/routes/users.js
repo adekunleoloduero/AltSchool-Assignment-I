@@ -78,9 +78,8 @@ usersRoute.post('/authenticateUser', (req, res) => {
 
 usersRoute.get('/getAllUsers', 
     async (req, res, next) => {
-        const passwordAuthorized = await passwordAuthentication(req, res, usersDbPath);
-        if (!passwordAuthorized) {
-            console.log('ERROR', req.errorMessage)
+        const passwordAuthenticated = await passwordAuthentication(req, res, usersDbPath);
+        if (!passwordAuthenticated) {
             res.statusCode = req.errorCode; //Added to req object in the passwordAuthentication  function
             res.json(req.errorMessage); //Added to req object in the passwordAuthentication  function
         } else {
@@ -89,7 +88,6 @@ usersRoute.get('/getAllUsers',
     }, 
     async (req, res, next) => {
         const adminAuthorized = await adminAuthorization(req, res, ['admin'], usersDbPath);
-        console.log(adminAuthorization);
         if (!adminAuthorized) {
             res.statusCode = req.errorCode; //Added to req object in the adminAuthorization  function
             res.json(req.errorMessage); //Added to req object in the adminAuthorization  function
