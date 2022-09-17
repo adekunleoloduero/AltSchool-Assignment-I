@@ -150,7 +150,7 @@ describe('Route: /users/getAllUsers, Method: GET', () => {
 
         const response = await supertest(app).get('/users/getAllUsers').send(loginDetails);
         expect(response.statusCode).toBe(400);
-        expect(response.text).toBe(JSON.stringify({ message: 'Username or password is missing.' }));
+        expect(response.text).toBe(JSON.stringify({ message: 'Please, enter your login details.' }));
     });
 
     it('Returns the expected error message if invalid username is entered', async() => {
@@ -161,7 +161,7 @@ describe('Route: /users/getAllUsers, Method: GET', () => {
 
         const response = await supertest(app).get('/users/getAllUsers').send(loginDetails);
         expect(response.statusCode).toBe(400);
-        expect(response.text).toBe(JSON.stringify({ message: 'Username not found, please register.' }));
+        expect(response.text).toBe(JSON.stringify({ message: 'Invalid username or email.' }));
     });
 
     it('Returns the expected error message if invalid password is entered', async() => {
@@ -172,10 +172,69 @@ describe('Route: /users/getAllUsers, Method: GET', () => {
 
         const response = await supertest(app).get('/users/getAllUsers').send(loginDetails);
         expect(response.statusCode).toBe(400);
-        expect(response.text).toBe(JSON.stringify({ message: 'Wrong username or password.' }));
+        expect(response.text).toBe(JSON.stringify({ message: 'Wrong password for user.' }));
     });
 
 });
 
 
 
+
+describe('Route: /users/authenticateUser, Method: POST', () => {
+   
+    it('Signs in the user and returns the expected succces message if valid username/email with password was entered', async () => {
+        const loginDetails = {
+            "username": "kunleoloduero",
+            "password": "adekunle150"
+        }
+        const users = await returnAllRecords(usersDbPath);
+        const usersArray = JSON.parse(users);
+        const userFound = usersArray.find((user) => {
+            if (user.username === loginDetails.username || user.email === loginDetails.email) {
+                return user;
+            }
+        });
+        const response = await supertest(app).post('/users/authenticateUser').send(loginDetails);
+        expect(response.status).toBe(200);
+        expect(response.text).toBe(JSON.stringify({ message: `Welcome back ${userFound.firstname}.`}));
+    });
+    
+    it('Returns the expected error message if login details is not provided', async () => {
+        const loginDetails = {} //Missing login detail
+       
+        const response = await supertest(app).post('/users/authenticateUser').send(loginDetails);
+        expect(response.status).toBe(400);
+        expect(response.text).toBe(JSON.stringify({ message: "Please, enter your login details."}));
+    });
+    
+    it('Returns the expected error message if invalid username/email is provided', async () => {
+        const loginDetails = { //Missing or invalid username/email
+            "username": "kunleoloduero10",
+            "password": "adekunle150",
+        }
+        // const loginDetails = { //Missing or invalid username/email
+        //     "password": "adekunle150",
+        //     "email": "sat@gmail.com"
+        // }
+       
+        const response = await supertest(app).post('/users/authenticateUser').send(loginDetails);
+        expect(response.status).toBe(400);
+        expect(response.text).toBe(JSON.stringify({ message: "Invalid username or email."}));
+    });
+
+    it('Returns the expected error message if invalid password is provided', async () => {
+        const loginDetails = { //Wrong password
+            "username": "janed",
+            "password": "janny12"
+        }
+
+        // const loginDetails = { //Wrong password
+        //     "email": "jad@gmail.com",
+        //     "password": "janny12"
+        // }
+       
+        const response = await supertest(app).post('/users/authenticateUser').send(loginDetails);
+        expect(response.status).toBe(400);
+        expect(response.text).toBe(JSON.stringify({ message: "Wrong password for user."}));
+    });
+});

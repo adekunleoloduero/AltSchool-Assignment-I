@@ -101,8 +101,36 @@ usersRoute.post('/create',
 
 
 
-usersRoute.post('/authenticateUser', (req, res) => {
-    res.send('Authenticate User');
+usersRoute.post('/authenticateUser',
+    async (req, res, next) => {
+        try {
+            const passwordAuthenticated = await passwordAuthentication(req, res, usersDbPath);
+            if (!passwordAuthenticated) {
+                res.statusCode = req.errorCode; //Added to req object in the passwordAuthentication  function
+                res.json(req.errorMessage); //Added to req object in the passwordAuthentication  function
+            } else {
+                next();
+            }
+        } catch(error) {
+            error.type = "Not Found"
+            next(error);
+        }
+    },
+    async (req, res, next) => {
+        try {
+            const users = await returnAllRecords(usersDbPath);
+            const usersArray = JSON.parse(users);
+            const userFound = usersArray.find(user => {
+                if (user.username === req.body.username || user.email === req.body.email) {
+                    return user;
+                }
+            });
+            res.statusCode = 200;
+            res.json({ message: `Welcome back ${userFound.firstname}.`});
+        } catch(error) {
+            error.type = "Not Found";
+            next(error);
+        }   
 });
 
 
@@ -132,6 +160,16 @@ usersRoute.get('/getAllUsers',
        res.json(usersArray);
     }
 );
+
+
+//Error handlging middleware
+usersRoute.use((error, req, res, next) => {
+    if (error.type == 'Not Found') {
+        res.json({ message: 'Oops, something went wrong. Try again.'})
+    }
+});
+
+
 
 
 

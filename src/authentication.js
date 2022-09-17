@@ -9,23 +9,28 @@ const { returnAllRecords} = require('./utilities');
 
 async function passwordAuthentication(req, res, usersDbPath) {
     const loginDetails = req.body;
-    if (loginDetails.username === undefined || loginDetails.password === undefined) {
+    if ((loginDetails.username === undefined && loginDetails.email === undefined) && loginDetails.password === undefined) {
         req.errorCode = 400;
-        req.errorMessage = {message: 'Username or password is missing.'}
+        req.errorMessage = {message: 'Please, enter your login details.'}
         return;
     }
     const users = await returnAllRecords(usersDbPath);
     const usersArray = JSON.parse(users);
-    const userFound = usersArray.find(user => user.username === loginDetails.username);
+    const userFound = usersArray.find(user => {
+        if (user.username === loginDetails.username || user.email === loginDetails.email) {
+            return user;
+        }
+    });
+
     if (!userFound) {
         req.errorCode = 400;
-        req.errorMessage = {message: 'Username not found, please register.'};
+        req.errorMessage = {message: 'Invalid username or email.'};
         return;
     }
 
     if (userFound.password !== loginDetails.password) {
         req.errorCode = 400;
-        req.errorMessage = {message: 'Wrong username or password.'};
+        req.errorMessage = {message: 'Wrong password for user.'};
         return;
     } else {
         req.userRole = userFound.role;
