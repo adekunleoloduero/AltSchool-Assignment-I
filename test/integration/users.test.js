@@ -76,7 +76,7 @@ describe('Route: /users/getAllUsers, Method: GET', () => {
 
         const response = await supertest(app).get('/users/getAllUsers').send(loginDetails);
         expect(response.statusCode).toBe(401);
-        expect(response.text).toBe(JSON.stringify({ message: 'Access denied. Only admins can view all users.' }));
+        expect(response.text).toBe(JSON.stringify({ message: 'Access denied. Only admin users are permitted.' }));
     });
 
     it('Fails with the expected message if inadequate loging detail is provided', async() => {
