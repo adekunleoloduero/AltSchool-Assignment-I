@@ -26,48 +26,79 @@ usersRoute.get('/', (req, res) => {
 
 
 //POST: users/create (Register a new user)
-usersRoute.post('/create', async (req, res) => {
-    const user = req.body;
-    let message;
-    const users = await returnAllRecords(usersDbPath);
-    let usersArray = JSON.parse(users);
-    let inputValidated = false
+usersRoute.post('/create', 
+    (req, res, next) => {
+        let message;
+        let userInfo = req.body;
+        if (!userInfo.firstname) {
+            message = 'Please, enter your firstname.';
+        } else if (!userInfo.lastname) {
+            message = 'Please, enter your lastname.';
+        } else if (!userInfo.username) {
+            message = 'Please, enter a username.';
+        } else if (!userInfo.password) {
+            message = 'Please, enter a password.';
+        } else if (!userInfo.email) {
+            message = 'Please, enter your email.';
+        } else if (!userInfo.role) {
+            message = 'Please, select a role.';
+        } 
+        
+        //Check if there is an invalid input
+        req.INVALID_INPUT = { message };
+        if (req.INVALID_INPUT.message && req.INVALID_INPUT.message !== undefined) {
+            res.statusCode = 400;
+            res.json(req.INVALID_INPUT);
+        } else {
+            next();
+        }
+    }, 
+    async (req, res, next) => {
+        let message;
+        const users = await returnAllRecords(usersDbPath);
+        const userInfo = req.body;
 
-    const userFound = usersArray.find(savedUser => savedUser.username === user.username)
-    //Input validation
-    if (!user.username) {
-        message = 'Please, enter a username.';
-    } else if (!user.password) {
-        message = 'Please, enter a password.';
-    } else if (userFound) {
-        message = 'Sorry, this username already exists.';
-    } else {
-        inputValidated = true;
-    }
-
-    //Run only for the first user to be registered
-    if (inputValidated) {
-        let userId;
+        //Skip to the part where the very first user is created.
         if (!users) {
+            next();
+        }
+
+        const usersArray = JSON.parse(users);
+        const userFound = usersArray.find(savedUser => savedUser.username === userInfo.username);
+        if (userFound) {
+            message = 'Sorry, this username already exists.';
+            req.INVALID_INPUT = { message };
+            res.statusCode = 403;
+            res.json(req.INVALID_INPUT);
+        } else {
+            next();
+        }
+    },
+    async (req, res) => {
+        const users = await returnAllRecords(usersDbPath);
+        let usersArray;
+        let userId;
+        const userInfo = req.body;
+        if (!users) {
+            //Run only for the first user to be registered
             usersArray = [];
             userId = 1;
-            user.id = userId;
-            usersArray.push(user);
+            userInfo.id = userId;
+            usersArray.push(userInfo);
             writeToFile(usersDbPath, JSON.stringify(usersArray));
-        } else {
-            //Run if there are already records in the database
+        } else { //Run for subsequent users
+            usersArray = JSON.parse(users);
             userId = usersArray[usersArray.length - 1].id + 1;
-            user.id = userId;
-            usersArray.push(user);
+            userInfo.id = userId;
+            usersArray.push(userInfo);
             writeToFile(usersDbPath, JSON.stringify(usersArray));
         }
-        message = 'Thanks for registering.'
+        message = `Hello ${userInfo.firstname}, thanks for registering.`;
         res.statusCode = 201;
-    } else {
-        res.statusCode = 400;
+        res.json({ message });
     }
-    res.json({ message });
-});
+);
+
 
 
 usersRoute.post('/authenticateUser', (req, res) => {
