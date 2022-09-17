@@ -1,48 +1,56 @@
 [
     {
-        "username": "adekunle100",
-        "password": "adekunlepass",
+        "firstname": "Sheriff Adekunle",
+        "lastname": "Tajudeen",
+        "username": "kunleoloduero",
+        "password": "adekunle150",
+        "email": "sat@gmail.com",
         "role": "admin",
         "id": 1
     },
     {
-        "username": "pandorabet",
-        "password": "pandbaba10",
+        "firstname": "Jon",
+        "lastname": "Doe",
+        "username": "jonnyd",
+        "password": "jonny123",
+        "email": "jd@gmail.com",
+        "role": "reader",
         "id": 2
     },
     {
-        "username": "jakesully",
-        "password": "jake20",
+        "firstname": "Jane",
+        "lastname": "Doe",
+        "username": "janed",
+        "password": "janny123",
+        "email": "jad@gmail.com",
+        "role": "reader",
         "id": 3
     },
     {
-        "username": "adekunle200",
-        "password": "adex200",
+        "firstname": "Arabambi",
+        "lastname": "Oromiyan",
+        "username": "sango",
+        "password": "sango123",
+        "email": "sangoalafin@gmail.com",
+        "role": "reader",
         "id": 4
     },
     {
-        "username": "adekunle300",
-        "password": "adex300",
+        "firstname": "Bill",
+        "lastname": "Gates",
+        "username": "billyg",
+        "password": "billyg123",
+        "email": "billyg@gmail.com",
+        "role": "reader",
         "id": 5
     },
     {
-        "username": "testOneOkan",
-        "password": "test1",
+        "firstname": "Wuraola",
+        "lastname": "Adekunle",
+        "username": "wurababy",
+        "password": "warab123",
+        "email": "wurab@gmail.com",
+        "role": "admin",
         "id": 6
-    },
-    {
-        "username": "testOne",
-        "password": "test1",
-        "id": 7
-    },
-    {
-        "username": "testMeji",
-        "password": "test1",
-        "id": 8
-    },
-    {
-        "username": "harrybobo",
-        "password": "harrison10",
-        "id": 9
     }
 ]
