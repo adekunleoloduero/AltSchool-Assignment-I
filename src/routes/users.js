@@ -1,7 +1,7 @@
 const express = require('express');
 const app = require('../app');
-const { getPath, writeToFile, returnAllRecords } = require('../utilities');
-const { passwordAuthentication, adminAuthorization } = require('../authentication');
+const { getPath, writeToFile, returnAllRecords } = require('../utils');
+const { inputValidation, auth } = require('../auth');
 const bodyParser = require('body-parser');
 
 
@@ -104,15 +104,29 @@ usersRoute.post('/create',
 usersRoute.post('/authenticateUser',
     async (req, res, next) => {
         try {
-            const passwordAuthenticated = await passwordAuthentication(req, res, usersDbPath);
-            if (!passwordAuthenticated) {
-                res.statusCode = req.errorCode; //Added to req object in the passwordAuthentication  function
-                res.json(req.errorMessage); //Added to req object in the passwordAuthentication  function
+            const inputValidated = await inputValidation(req, res, usersDbPath);
+            if (!inputValidated) {
+                res.statusCode = req.ERROR_CODE; //Added to req object in the passwordAuthentication  function
+                res.json(req.ERROR_MESSAGE); //Added to req object in the passwordAuthentication  function
             } else {
                 next();
             }
         } catch(error) {
             error.type = "Not Found"
+            next(error);
+        }
+    },
+    async (req, res, next) => {
+        try {
+            const authPassed = await auth(req, res, ['admin', 'reader']);
+            if (!authPassed) {
+                res.statusCode = req.ERROR_CODE;
+                res.json = req.ERROR_MESSAGE;
+            } else {
+                next();
+            }
+        } catch(error) {
+            error.type = "Not Found";
             next(error);
         }
     },
@@ -137,19 +151,19 @@ usersRoute.post('/authenticateUser',
 
 usersRoute.get('/getAllUsers', 
     async (req, res, next) => {
-        const passwordAuthenticated = await passwordAuthentication(req, res, usersDbPath);
-        if (!passwordAuthenticated) {
-            res.statusCode = req.errorCode; //Added to req object in the passwordAuthentication  function
-            res.json(req.errorMessage); //Added to req object in the passwordAuthentication  function
+        const inputValidated = await inputValidation(req, res, usersDbPath);
+        if (!inputValidated) {
+            res.statusCode = req.ERROR_CODE; //Added to req object in the passwordAuthentication  function
+            res.json(req.ERROR_MESSAGE); //Added to req object in the passwordAuthentication  function
         } else {
             next();
         }
     }, 
     async (req, res, next) => {
-        const adminAuthorized = await adminAuthorization(req, res, ['admin'], usersDbPath);
-        if (!adminAuthorized) {
-            res.statusCode = req.errorCode; //Added to req object in the adminAuthorization  function
-            res.json(req.errorMessage); //Added to req object in the adminAuthorization  function
+        const authPassed = await auth(req, res, ['admin']);
+        if (!authPassed) {
+            res.statusCode = req.ERROR_CODE; //Added to req object in the adminAuthorization  function
+            res.json(req.ERROR_MESSAGE); //Added to req object in the adminAuthorization  function
         } else {
             next();
         }

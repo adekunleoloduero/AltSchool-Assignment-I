@@ -1,5 +1,5 @@
 
-const { returnAllRecords} = require('./utilities');
+const { returnAllRecords} = require('./utils');
 
 
 
@@ -7,11 +7,11 @@ const { returnAllRecords} = require('./utilities');
 // const usersDbPath = getPath(__dirname, ['src'], ['test', 'fixtures', 'stubs', 'users.json']); //For testing purpose
 
 
-async function passwordAuthentication(req, res, usersDbPath) {
+async function inputValidation(req, res, usersDbPath) {
     const loginDetails = req.body;
     if ((loginDetails.username === undefined && loginDetails.email === undefined) && loginDetails.password === undefined) {
-        req.errorCode = 400;
-        req.errorMessage = {message: 'Please, enter your login details.'}
+        req.ERROR_CODE = 400;
+        req.ERROR_MESSAGE = {message: 'Please, enter your login details.'}
         return;
     }
     const users = await returnAllRecords(usersDbPath);
@@ -23,28 +23,28 @@ async function passwordAuthentication(req, res, usersDbPath) {
     });
 
     if (!userFound) {
-        req.errorCode = 400;
-        req.errorMessage = {message: 'Invalid username or email.'};
+        req.ERROR_CODE = 400;
+        req.ERROR_MESSAGE = {message: 'Invalid username or email.'};
         return;
     }
 
     if (userFound.password !== loginDetails.password) {
-        req.errorCode = 400;
-        req.errorMessage = {message: 'Wrong password for user.'};
+        req.ERROR_CODE = 400;
+        req.ERROR_MESSAGE = {message: 'Wrong password for user.'};
         return;
     } else {
-        req.userRole = userFound.role;
+        req.USER_ROLE = userFound.role;
         return true;
     }
 }
 
 
-async function adminAuthorization(req, res, roles, usersDbPath) {
-    if (roles.includes(req.userRole)) {
+async function auth(req, res, roles) {
+    if (roles.includes(req.USER_ROLE)) {
         return true;
     } else {
-        req.errorCode = 401;
-        req.errorMessage = { message: 'Access denied. Only admin users are permitted.' };
+        req.ERROR_CODE = 401;
+        req.ERROR_MESSAGE = { message: 'Access denied. Only admin users are permitted.' };
         return;
     } 
 } 
@@ -53,6 +53,6 @@ async function adminAuthorization(req, res, roles, usersDbPath) {
 
 
 module.exports = {
-    passwordAuthentication,
-    adminAuthorization,
+    inputValidation,
+    auth,
 }

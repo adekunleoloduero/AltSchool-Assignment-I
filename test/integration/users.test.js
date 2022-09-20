@@ -1,5 +1,5 @@
 const app = require('../../src/app');
-const { getPath, returnAllRecords } = require('../../src/utilities');
+const { getPath, returnAllRecords } = require('../../src/utils');
 const supertest = require('supertest');
 
 
@@ -207,7 +207,7 @@ describe('Route: /users/authenticateUser, Method: POST', () => {
         expect(response.text).toBe(JSON.stringify({ message: "Please, enter your login details."}));
     });
     
-    it('Returns the expected error message if invalid username/email is provided', async () => {
+    it('Returns the expected error message if invalid username/email was entered', async () => {
         const loginDetails = { //Missing or invalid username/email
             "username": "kunleoloduero10",
             "password": "adekunle150",
@@ -222,7 +222,7 @@ describe('Route: /users/authenticateUser, Method: POST', () => {
         expect(response.text).toBe(JSON.stringify({ message: "Invalid username or email."}));
     });
 
-    it('Returns the expected error message if invalid password is provided', async () => {
+    it('Returns the expected error message if invalid password was entered', async () => {
         const loginDetails = { //Wrong password
             "username": "janed",
             "password": "janny12"
