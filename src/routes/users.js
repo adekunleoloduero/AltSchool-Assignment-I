@@ -1,7 +1,7 @@
 const express = require('express');
 const app = require('../app');
-const { getPath, writeToFile, returnAllRecords } = require('../utilities');
-const { passwordAuthentication, adminAuthorization } = require('../authentication');
+const { getPath, writeToFile, returnAllRecords } = require('../utils');
+const { inputValidation, auth } = require('../auth');
 const bodyParser = require('body-parser');
 
 
@@ -101,27 +101,69 @@ usersRoute.post('/create',
 
 
 
-usersRoute.post('/authenticateUser', (req, res) => {
-    res.send('Authenticate User');
+usersRoute.post('/authenticateUser',
+    async (req, res, next) => {
+        try {
+            const inputValidated = await inputValidation(req, res, usersDbPath);
+            if (!inputValidated) {
+                res.statusCode = req.ERROR_CODE; //Added to req object in the passwordAuthentication  function
+                res.json(req.ERROR_MESSAGE); //Added to req object in the passwordAuthentication  function
+            } else {
+                next();
+            }
+        } catch(error) {
+            error.type = "Not Found"
+            next(error);
+        }
+    },
+    async (req, res, next) => {
+        try {
+            const authPassed = await auth(req, res, ['admin', 'reader']);
+            if (!authPassed) {
+                res.statusCode = req.ERROR_CODE;
+                res.json = req.ERROR_MESSAGE;
+            } else {
+                next();
+            }
+        } catch(error) {
+            error.type = "Not Found";
+            next(error);
+        }
+    },
+    async (req, res, next) => {
+        try {
+            const users = await returnAllRecords(usersDbPath);
+            const usersArray = JSON.parse(users);
+            const userFound = usersArray.find(user => {
+                if (user.username === req.body.username || user.email === req.body.email) {
+                    return user;
+                }
+            });
+            res.statusCode = 200;
+            res.json({ message: `Welcome back ${userFound.firstname}.`});
+        } catch(error) {
+            error.type = "Not Found";
+            next(error);
+        }   
 });
 
 
 
 usersRoute.get('/getAllUsers', 
     async (req, res, next) => {
-        const passwordAuthenticated = await passwordAuthentication(req, res, usersDbPath);
-        if (!passwordAuthenticated) {
-            res.statusCode = req.errorCode; //Added to req object in the passwordAuthentication  function
-            res.json(req.errorMessage); //Added to req object in the passwordAuthentication  function
+        const inputValidated = await inputValidation(req, res, usersDbPath);
+        if (!inputValidated) {
+            res.statusCode = req.ERROR_CODE; //Added to req object in the passwordAuthentication  function
+            res.json(req.ERROR_MESSAGE); //Added to req object in the passwordAuthentication  function
         } else {
             next();
         }
     }, 
     async (req, res, next) => {
-        const adminAuthorized = await adminAuthorization(req, res, ['admin'], usersDbPath);
-        if (!adminAuthorized) {
-            res.statusCode = req.errorCode; //Added to req object in the adminAuthorization  function
-            res.json(req.errorMessage); //Added to req object in the adminAuthorization  function
+        const authPassed = await auth(req, res, ['admin']);
+        if (!authPassed) {
+            res.statusCode = req.ERROR_CODE; //Added to req object in the adminAuthorization  function
+            res.json(req.ERROR_MESSAGE); //Added to req object in the adminAuthorization  function
         } else {
             next();
         }
@@ -132,6 +174,16 @@ usersRoute.get('/getAllUsers',
        res.json(usersArray);
     }
 );
+
+
+//Error handlging middleware
+usersRoute.use((error, req, res, next) => {
+    if (error.type == 'Not Found') {
+        res.json({ message: 'Oops, something went wrong. Try again.'})
+    }
+});
+
+
 
 
 
